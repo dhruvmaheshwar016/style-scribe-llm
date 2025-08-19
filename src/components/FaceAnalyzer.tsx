@@ -12,6 +12,7 @@ interface FaceAnalysis {
     cheekbones: string;
     forehead: string;
   };
+  photoData?: string;
 }
 
 interface FaceAnalyzerProps {
@@ -68,7 +69,8 @@ export const FaceAnalyzer = ({ onAnalysisComplete }: FaceAnalyzerProps) => {
             jawline: faceShape === 'square' ? 'angular' : 'soft',
             cheekbones: faceShape === 'round' ? 'full' : 'defined',
             forehead: faceShape === 'oblong' ? 'high' : 'proportional'
-          }
+          },
+          photoData: imageUrl // Store the image data for Gemini analysis
         };
         
         onAnalysisComplete(analysis);
