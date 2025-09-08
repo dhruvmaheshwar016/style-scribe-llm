@@ -23,23 +23,17 @@ interface StyleRecommendation {
 }
 
 export class GeminiService {
-  private static API_KEY_STORAGE_KEY = 'gemini_api_key';
   private static genAI: GoogleGenerativeAI | null = null;
 
-  static saveApiKey(apiKey: string): void {
-    localStorage.setItem(this.API_KEY_STORAGE_KEY, apiKey);
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    console.log('Gemini API key saved successfully');
-  }
-
   static getApiKey(): string | null {
-    return localStorage.getItem(this.API_KEY_STORAGE_KEY);
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+    return envKey || null;
   }
 
   static async testApiKey(apiKey: string): Promise<boolean> {
     try {
       const testGenAI = new GoogleGenerativeAI(apiKey);
-      const model = testGenAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = testGenAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       
       const result = await model.generateContent('Test connection');
       return !!result.response;
@@ -60,7 +54,8 @@ export class GeminiService {
   ): Promise<StyleRecommendation[]> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
-      throw new Error('Gemini API key not found');
+      // If no API key is configured, return fallback recommendations
+      return this.createFallbackRecommendations();
     }
 
     if (!this.genAI) {
@@ -69,7 +64,7 @@ export class GeminiService {
 
     try {
       const model = this.genAI.getGenerativeModel({ 
-        model: userPhoto ? 'gemini-pro-vision' : 'gemini-pro' 
+        model: 'gemini-2.5-flash' 
       });
 
       const prompt = this.buildPrompt(analysis, preferences);
@@ -224,7 +219,7 @@ Provide expert-level, personalized advice that goes beyond generic recommendatio
     }
 
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       
       const prompt = `
 As an expert stylist, provide personalized advice for someone who received these style recommendations:

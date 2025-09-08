@@ -349,15 +349,7 @@ export const StyleRecommendations = ({ analysis, useGemini = false }: StyleRecom
       )}
 
       {/* No Gemini Alert */}
-      {!useGemini && !isGenerating && (
-        <Alert className="border-primary/20 bg-primary/5">
-          <Sparkles className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Want more personalized recommendations?</strong> Configure Gemini Pro API 
-            for AI-enhanced styling advice with detailed reasoning and maintenance tips.
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* Removed callout suggesting API configuration */}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { HeroSection } from '@/components/HeroSection';
 import { FaceAnalyzer } from '@/components/FaceAnalyzer';
 import { StyleRecommendations } from '@/components/StyleRecommendations';
 import { TechnicalSpecs } from '@/components/TechnicalSpecs';
-import { ApiKeySetup } from '@/components/ApiKeySetup';
+// Removed ApiKeySetup since API key is now from env
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Settings } from 'lucide-react';
 import { GeminiService } from '@/services/GeminiService';
@@ -20,22 +20,15 @@ interface FaceAnalysis {
 }
 
 const Index = () => {
-  const [currentStep, setCurrentStep] = useState<'hero' | 'api-setup' | 'analyze' | 'results'>('hero');
+  const [currentStep, setCurrentStep] = useState<'hero' | 'analyze' | 'results'>('hero');
   const [analysis, setAnalysis] = useState<FaceAnalysis | null>(null);
-  const [hasApiKey, setHasApiKey] = useState(!!GeminiService.getApiKey());
+  const [hasApiKey] = useState(!!GeminiService.getApiKey());
 
   const handleGetStarted = () => {
-    if (hasApiKey) {
-      setCurrentStep('analyze');
-    } else {
-      setCurrentStep('api-setup');
-    }
-  };
-
-  const handleApiKeyConfigured = () => {
-    setHasApiKey(true);
     setCurrentStep('analyze');
   };
+
+  // Removed API key configuration flow
 
   const handleAnalysisComplete = (result: FaceAnalysis) => {
     setAnalysis(result);
@@ -46,15 +39,11 @@ const Index = () => {
     if (currentStep === 'results') {
       setCurrentStep('analyze');
     } else if (currentStep === 'analyze') {
-      setCurrentStep(hasApiKey ? 'hero' : 'api-setup');
-    } else if (currentStep === 'api-setup') {
       setCurrentStep('hero');
     }
   };
 
-  const openApiSetup = () => {
-    setCurrentStep('api-setup');
-  };
+  // Removed API setup opener
 
   return (
     <div className="min-h-screen bg-gradient-background">
@@ -71,17 +60,7 @@ const Index = () => {
             Back
           </Button>
           
-          {hasApiKey && currentStep !== 'api-setup' && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={openApiSetup}
-              className="rounded-full shadow-luxury"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              API Settings
-            </Button>
-          )}
+          {/* Removed API Settings button */}
         </div>
       )}
 
@@ -93,9 +72,7 @@ const Index = () => {
         </>
       )}
 
-      {currentStep === 'api-setup' && (
-        <ApiKeySetup onApiKeyConfigured={handleApiKeyConfigured} />
-      )}
+      {/* Removed API setup step */}
 
       {currentStep === 'analyze' && (
         <div className="min-h-screen flex items-center justify-center p-6">
